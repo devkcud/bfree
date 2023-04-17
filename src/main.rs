@@ -1,36 +1,33 @@
 mod utils;
 mod memory;
 
-use utils::argmanager::Argumenter;
-use utils::help;
-use memory::table;
-use memory::manager::MemoryManager;
+use crate::utils::args::ArgsConstructor;
+use crate::memory::table;
+use crate::memory::manager::MemoryManager;
 
 fn main() {
-    let arguer = Argumenter::new("-");
+    let argman = ArgsConstructor::new();
 
-    if arguer.has_flag(vec!["help", "h"]).exists() {
-        help::HelpMenu::new(); // TODO: Create help menu
-        return;
-    }
+    // TODO: Create help menu
+    argman.functionize('h', || todo!("Help menu"));
 
-    let flag_memory: bool = arguer.has_flag(vec!["memory", "memo", "m"]).exists();
-    let flag_swap: bool = arguer.has_flag(vec!["swap", "s"]).exists();
-    let flag_as_bytes: bool = arguer.has_flag(vec!["bytes", "b"]).exists();
-    let flag_quiet: bool = arguer.has_flag(vec!["quiet", "q"]).exists();
+    let flag_memory: bool = argman.contains('m');
+    let flag_swap: bool = argman.contains('s');
+    let flag_as_bytes: bool = argman.contains('b');
+    let flag_quiet: bool = argman.contains('q');
 
     let mut memoman: MemoryManager = MemoryManager::new(flag_as_bytes);
     memoman.refresh();
 
     let mut table = table::MemoryTable::new(memoman, flag_memory, flag_swap, flag_quiet);
 
-    for c in arguer.commands.join(" ").trim().chars() {
-        match c {
+    for command in argman.commands {
+        match command {
             't' => table.add_total(),
             'f' => table.add_free(),
             'u' => table.add_used(),
             'a' => table.add_memory_available(),
-            _ => {},
+            _ => (),
         }
     }
 
