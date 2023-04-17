@@ -8,14 +8,13 @@ use crate::memory::manager::MemoryManager;
 fn main() {
     let argman = ArgsConstructor::new();
 
-    // TODO: Create a memory flag, show only memory
-    let flag_memory: bool = true;
-    // TODO: Create a swap flag, show only swap
-    let flag_swap: bool = true;
-    // TODO: Create a as_bytes flag, show result as bytes
-    let flag_as_bytes: bool = false;
-    // TODO: Create a quiet flag, don't show extra output
-    let flag_quiet: bool = false;
+    // TODO: Create help menu
+    argman.functionize("help", "h", || todo!("Help menu"));
+
+    let flag_memory: bool = argman.exists("memory", "m");
+    let flag_swap: bool = argman.exists("swap", "s");
+    let flag_as_bytes: bool = argman.exists("byte", "b");
+    let flag_quiet: bool = argman.exists("quiet", "q");
 
     let mut memoman: MemoryManager = MemoryManager::new(flag_as_bytes);
     memoman.refresh();
