@@ -24,14 +24,14 @@ enum InsertType {
 
 impl MemoryTable {
     pub fn new(memoman: MemoryManager, show_memory: bool, show_swap: bool, quiet: bool) -> Self {
-        let row_titles: Row = if quiet == false { row![""] } else { row![] };
+        let row_titles: Row = if !quiet { row![""] } else { row![] };
 
         return MemoryTable {
             memoman: RefCell::new(memoman),
 
             row_titles: RefCell::new(row_titles),
-            row_memory: RefCell::new(if quiet == true { row![] } else { row!["Memory"] }),
-            row_swap: RefCell::new(if quiet == true { row![] } else { row!["Swap"] }),
+            row_memory: RefCell::new(if quiet { row![] } else { row!["Memory"] }),
+            row_swap: RefCell::new(if quiet { row![] } else { row!["Swap"] }),
 
             show_memory,
             show_swap,
@@ -45,17 +45,17 @@ impl MemoryTable {
 
         match at {
             InsertType::Title =>
-                if self.quiet == false || (self.show_memory == false && self.show_swap == false) {
+                if !self.quiet || (!self.show_memory && !self.show_swap) {
                     self.row_titles.borrow_mut().add_cell(cell);
                 }
 
             InsertType::Memory =>
-                if self.show_memory == true || (self.show_memory == false && self.show_swap == false) {
+                if self.show_memory || (!self.show_memory && !self.show_swap) {
                     self.row_memory.borrow_mut().add_cell(cell);
                 },
 
             InsertType::Swap =>
-                if self.show_swap == true || (self.show_memory == false && self.show_swap == false) {
+                if self.show_swap || (!self.show_memory && !self.show_swap) {
                     self.row_swap.borrow_mut().add_cell(cell);
                 },
         }
@@ -94,7 +94,7 @@ impl MemoryTable {
 
     pub fn is_empty(&self) -> bool {
         // Determine how many elements each vector should have based on the value of self.quiet
-        let min_elements: usize = (self.quiet == false) as usize;
+        let min_elements: usize = !self.quiet as usize;
 
         // Check if all of the vectors are empty (quiet == 0) or not (quiet == 1)
         return self.row_titles.borrow().len() == min_elements && self.row_memory.borrow().len() == min_elements && self.row_swap.borrow().len() == min_elements;
@@ -104,7 +104,7 @@ impl MemoryTable {
         let mut table: Table = Table::new();
         table.set_format(format::FormatBuilder::new().padding(0, 5).build());
 
-        if self.quiet == false { table.set_titles(self.row_titles.borrow().to_owned()); }
+        if !self.quiet { table.set_titles(self.row_titles.borrow().to_owned()); }
 
         match (self.show_memory, self.show_swap) {
             (true, false) => {
