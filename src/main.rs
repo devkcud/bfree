@@ -21,7 +21,7 @@ fn main() {
 
     let mut table = table::MemoryTable::new(memoman, flag_memory, flag_swap, flag_quiet);
 
-    for command in argman.get_commands() {
+    for command in argman.commands {
         match command {
             't' => table.add_total(),
             'f' => table.add_free(),
