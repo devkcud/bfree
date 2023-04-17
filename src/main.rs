@@ -9,12 +9,12 @@ fn main() {
     let argman = ArgsConstructor::new();
 
     // TODO: Create help menu
-    argman.functionize("help", "h", || todo!("Help menu"));
+    argman.functionize('h', || todo!("Help menu"));
 
-    let flag_memory: bool = argman.exists("memory", "m");
-    let flag_swap: bool = argman.exists("swap", "s");
-    let flag_as_bytes: bool = argman.exists("byte", "b");
-    let flag_quiet: bool = argman.exists("quiet", "q");
+    let flag_memory: bool = argman.contains('m');
+    let flag_swap: bool = argman.contains('s');
+    let flag_as_bytes: bool = argman.contains('b');
+    let flag_quiet: bool = argman.contains('q');
 
     let mut memoman: MemoryManager = MemoryManager::new(flag_as_bytes);
     memoman.refresh();
