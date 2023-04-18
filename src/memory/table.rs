@@ -1,6 +1,6 @@
 use std::cell::RefCell;
-
 use prettytable::{Cell, Table, format, Row, row};
+use colored::Colorize;
 use crate::memory::manager::MemoryManager;
 
 pub struct MemoryTable {
@@ -30,8 +30,8 @@ impl MemoryTable {
             memoman: RefCell::new(memoman),
 
             row_titles: RefCell::new(row_titles),
-            row_memory: RefCell::new(if quiet { row![] } else { row!["Memory"] }),
-            row_swap: RefCell::new(if quiet { row![] } else { row!["Swap"] }),
+            row_memory: RefCell::new(if quiet { row![] } else { row!["Memory".yellow().bold()] }),
+            row_swap: RefCell::new(if quiet { row![] } else { row!["Swap".yellow().bold()] }),
 
             show_memory,
             show_swap,
@@ -62,9 +62,9 @@ impl MemoryTable {
     }
 
     fn insert_information(&self, title: &str, memory: u64, swap: u64) {
-        self.insert_cell(InsertType::Title, String::from(title));
-        self.insert_cell(InsertType::Memory, memory.to_string());
-        self.insert_cell(InsertType::Swap, swap.to_string());
+        self.insert_cell(InsertType::Title, title.yellow().bold().to_string());
+        self.insert_cell(InsertType::Memory, memory.to_string().green().to_string());
+        self.insert_cell(InsertType::Swap, swap.to_string().green().to_string());
     }
 
     pub fn add_total(&mut self) {
@@ -88,8 +88,8 @@ impl MemoryTable {
     pub fn add_memory_available(&mut self) {
         let available = self.memoman.borrow_mut().get_memory_available();
 
-        self.insert_cell(InsertType::Title, String::from("Available"));
-        self.insert_cell(InsertType::Memory, available.to_string())
+        self.insert_cell(InsertType::Title, "Available".yellow().bold().to_string());
+        self.insert_cell(InsertType::Memory, available.to_string().green().to_string());
     }
 
     pub fn is_empty(&self) -> bool {

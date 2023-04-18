@@ -1,5 +1,6 @@
 use std::{env::args, process::exit};
 use prettytable::{Table, format, row};
+use colored::Colorize;
 
 pub struct HelpMenu {
     project_name: String,
@@ -34,22 +35,28 @@ impl HelpMenu {
     pub fn assemble(&self) {
         let mut command_table = Table::new();
         command_table.set_format(*format::consts::FORMAT_BOX_CHARS);
-        command_table.set_titles(row!["Command", "Description"]);
+        command_table.set_titles(row!["Command".yellow().bold(), "Description".yellow().bold()]);
 
         let mut flag_table = Table::new();
         flag_table.set_format(*format::consts::FORMAT_BOX_CHARS);
-        flag_table.set_titles(row!["Flag   ", "Description"]);
+        flag_table.set_titles(row!["Flag   ".yellow().bold(), "Description".yellow().bold()]);
 
-        for (command, description) in &self.commands { command_table.add_row(row![command, description]); }
+        for (command, description) in &self.commands {
+            command_table.add_row(row![command.to_string().green(), description]);
+        }
+
         for (flag, description) in &self.commands {
             let mut flag = flag.to_string();
             flag.insert(0, '-');
 
-            flag_table.add_row(row![flag.to_string(), description]);
+            flag_table.add_row(row![flag.to_string().green(), description]);
         }
 
         command_table.printstd();
         flag_table.printstd();
+
+        println!("\nE.g.:\n\t{} {}", "bfree -mq tff".bold(), "# This will show the memory total and free (2 times) output without headers".dimmed().italic());
+
         exit(0);
     }
 }
