@@ -9,6 +9,12 @@ use crate::memory::manager::MemoryManager;
 fn main() {
     let argman = ArgsConstructor::new();
 
+    colored::control::set_override(false);
+
+    argman.functionize('C', || { // Enables coloring
+        colored::control::set_override(true);
+    });
+
     argman.functionize('h', || {
         HelpMenu::new("Hey")
             .add_command('t', "Add total memory/swap to the output")
