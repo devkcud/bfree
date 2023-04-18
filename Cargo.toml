@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 sysinfo = "0.28.4"
 prettytable = "0.10.0"
+colored = "2.0.0"
