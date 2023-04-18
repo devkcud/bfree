@@ -4,18 +4,16 @@ use colored::Colorize;
 
 pub struct HelpMenu {
     project_name: String,
-    project_description: String,
 
     commands: Vec<(char, String)>,
     flags: Vec<(char, String)>,
 }
 
 impl HelpMenu {
-    pub fn new(project_description: &str) -> Self {
+    pub fn new() -> Self {
         return HelpMenu {
             // May God forgive my sins.
             project_name: String::from(*args().collect::<Vec<String>>().first().unwrap_or(&"bfree".to_string()).to_string().split('/').collect::<Vec<&str>>().last().unwrap_or(&"bfree")),
-            project_description: String::from(project_description),
 
             commands: Vec::new(),
             flags: Vec::new(),
@@ -55,7 +53,7 @@ impl HelpMenu {
         command_table.printstd();
         flag_table.printstd();
 
-        println!("\nE.g.:\n\t{} {}", "bfree -mq tff".bold(), "# This will show the memory total and free (2 times) output without headers".dimmed().italic());
+        println!("\nE.g.:\n    {} {}", format!("{} -mq tff", self.project_name).bold(), "# This will show the memory total and free (2 times) output without headers".dimmed().italic());
 
         exit(0);
     }

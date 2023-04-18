@@ -12,7 +12,7 @@ fn main() {
     colored::control::set_override(argman.contains('C'));
 
     argman.functionize('h', || {
-        HelpMenu::new("Hey")
+        HelpMenu::new()
             .add_command('t', "Add total memory/swap to the output")
             .add_command('f', "Add free memory/swap to the output")
             .add_command('u', "Add used memory/swap to the output (req testing)")
