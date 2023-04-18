@@ -3,7 +3,7 @@ mod memory;
 
 use crate::utils::args::ArgsConstructor;
 use crate::utils::help::HelpMenu;
-use crate::memory::table;
+use crate::memory::table::MemoryTable;
 use crate::memory::manager::MemoryManager;
 
 fn main() {
@@ -34,7 +34,7 @@ fn main() {
     let mut memoman: MemoryManager = MemoryManager::new(flag_as_bytes);
     memoman.refresh();
 
-    let mut table = table::MemoryTable::new(memoman, flag_memory, flag_swap, flag_quiet);
+    let mut table = MemoryTable::new(memoman, flag_memory, flag_swap, flag_quiet);
 
     for command in argman.commands {
         match command {
