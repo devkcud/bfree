@@ -45,7 +45,7 @@ impl HelpMenu {
             command_table.add_row(row![command.to_string().green(), description]);
         }
 
-        for (flag, description) in &self.commands {
+        for (flag, description) in &self.flags {
             let mut flag = flag.to_string();
             flag.insert(0, '-');
 
