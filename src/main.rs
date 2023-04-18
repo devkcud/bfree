@@ -9,11 +9,7 @@ use crate::memory::manager::MemoryManager;
 fn main() {
     let argman = ArgsConstructor::new();
 
-    colored::control::set_override(false);
-
-    argman.functionize('C', || { // Enables coloring
-        colored::control::set_override(true);
-    });
+    colored::control::set_override(argman.contains('C'));
 
     argman.functionize('h', || {
         HelpMenu::new("Hey")
@@ -26,6 +22,7 @@ fn main() {
             .add_flag('s', "Add swap layer to the output")
             .add_flag('b', "Show result in B instead of KB")
             .add_flag('q', "Disable headers and naming, quiet output")
+            .add_flag('C', "Enable colored output")
             .assemble();
     });
 
