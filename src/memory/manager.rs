@@ -1,10 +1,11 @@
 use sysinfo::{System, SystemExt};
 
-const KB_SIZE: u64 = 2_u64.overflowing_pow(20).0;
+const KB_SIZE: u64 = 1000 << 10;
 
 pub struct MemoryManager {
     system: System,
     as_bytes: bool,
+    factor: u64,
 }
 
 impl MemoryManager {
@@ -12,49 +13,39 @@ impl MemoryManager {
         return MemoryManager {
             system: System::new(),
             as_bytes,
+            factor: if as_bytes { 1 } else { KB_SIZE },
         };
     }
 
     pub fn refresh(&mut self) -> () {
-        return self.system.refresh_memory();
+        self.system.refresh_memory();
+        return;
     }
 
     pub fn get_total(&mut self) -> (u64, u64) {
-        let memory: u64 = self.system.total_memory();
-        let swap: u64 = self.system.total_swap();
+        let memory = self.system.total_memory();
+        let swap = self.system.total_swap();
 
-        return match self.as_bytes {
-            true => (memory, swap),
-            false => (memory.overflowing_div(KB_SIZE).0, swap.overflowing_div(KB_SIZE).0),
-        };
+        return (memory / self.factor, swap / self.factor);
     }
 
     pub fn get_free(&mut self) -> (u64, u64) {
-        let memory: u64 = self.system.free_memory();
-        let swap: u64 = self.system.free_swap();
+        let memory = self.system.free_memory();
+        let swap = self.system.free_swap();
 
-        return match self.as_bytes {
-            true => (memory, swap),
-            false => (memory.overflowing_div(KB_SIZE).0, swap.overflowing_div(KB_SIZE).0),
-        };
+        return (memory / self.factor, swap / self.factor);
     }
 
     pub fn get_used(&mut self) -> (u64, u64) {
-        let memory: u64 = self.system.used_memory();
-        let swap: u64 = self.system.used_swap();
+        let memory = self.system.used_memory();
+        let swap = self.system.used_swap();
 
-        return match self.as_bytes {
-            true => (memory, swap),
-            false => (memory.overflowing_div(KB_SIZE).0, swap.overflowing_div(KB_SIZE).0),
-        };
+        return (memory / self.factor, swap / self.factor);
     }
 
     pub fn get_memory_available(&mut self) -> u64 {
-        let memory: u64 = self.system.available_memory();
+        let memory = self.system.available_memory();
 
-        return match self.as_bytes {
-            true => memory,
-            false => memory.overflowing_div(KB_SIZE).0,
-        }
+        return memory / self.factor;
     }
 }
