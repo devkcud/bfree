@@ -2,14 +2,26 @@ mod utils;
 mod memory;
 
 use crate::utils::args::ArgsConstructor;
+use crate::utils::help::HelpMenu;
 use crate::memory::table;
 use crate::memory::manager::MemoryManager;
 
 fn main() {
     let argman = ArgsConstructor::new();
 
-    // TODO: Create help menu
-    argman.functionize('h', || todo!("Help menu"));
+    argman.functionize('h', || {
+        HelpMenu::new("Hey")
+            .add_command('t', "Add total memory/swap to the output")
+            .add_command('f', "Add free memory/swap to the output")
+            .add_command('u', "Add used memory/swap to the output (req testing)")
+            .add_command('a', "Add available memory to the output")
+            .add_flag('h', "Show help menu")
+            .add_flag('m', "Add memory layer to the output")
+            .add_flag('s', "Add swap layer to the output")
+            .add_flag('b', "Show result in B instead of KB")
+            .add_flag('q', "Disable headers and naming, quiet output")
+            .assemble();
+    });
 
     let flag_memory: bool = argman.contains('m');
     let flag_swap: bool = argman.contains('s');
