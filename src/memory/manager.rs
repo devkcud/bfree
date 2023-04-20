@@ -1,7 +1,5 @@
 use sysinfo::{System, SystemExt};
 
-const KB_SIZE: u64 = 1000 << 10;
-
 pub struct MemoryManager {
     system: System,
     as_bytes: bool,
@@ -13,7 +11,7 @@ impl MemoryManager {
         return MemoryManager {
             system: System::new(),
             as_bytes,
-            factor: if as_bytes { 1 } else { KB_SIZE },
+            factor: if as_bytes { 1 } else { 1024 << 10 },
         };
     }
 
